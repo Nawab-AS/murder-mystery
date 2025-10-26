@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Murder Mystery</title>
+    <link rel="stylesheet" href="./styles.css">
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./index.js" defer></script>
+</head>
+<body>
+    <div id="terminal">
+        <h1 class="title">{{ title }}</h1>
+        <div class="line" v-for="line in terminal" :key="line.text">
+            <p :style="{ 'text-align': line.align, 'color': (line.color || 'white')}">{{ line.text }}</p>
+        </div>
+    </div>
+</body>
+</html>
