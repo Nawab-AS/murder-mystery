@@ -9,6 +9,10 @@ body {
     margin: 0px;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 #terminal {
     border: 4px double green;
     background-color: rgb(24, 24, 24);
@@ -20,19 +24,21 @@ body {
     animation-timing-function: cubic-bezier(0.6, 0.05, 0.39, 0.95);
     max-width: 90vw;
     max-height: 90vh;
+    overflow-y: auto;
 }
 
 h1.title {
     text-align: center;
     color: #8d0000;
     margin-top: 0px;
+    margin-bottom: 20px;
     font-size: 1.4rem;
     font-weight: bolder;
 }
-
 .line p {
-    margin: 0px;
+    margin: 0px 0px 15px 0px;
     padding: 0px;
+    white-space: pre-wrap;
 }
 
 

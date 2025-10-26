@@ -8,9 +8,10 @@
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="./index.js" defer></script>
+    <script src="./game.js" defer></script>
 </head>
 <body>
-    <div id="terminal">
+    <div id="terminal" v-cloak>
         <h1 class="title">{{ title }}</h1>
         <div class="line" v-for="line in terminal" :key="line.text">
             <p :style="{ 'text-align': line.align, 'color': (line.color || 'white')}">{{ line.text }}</p>
