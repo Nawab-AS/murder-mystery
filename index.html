@@ -14,7 +14,7 @@
     <div id="terminal" v-cloak>
         <h1 class="title">{{ title }}</h1>
         <div class="line" v-for="line in terminal" :key="line.text">
-            <p :style="{ 'text-align': line.align, 'color': (line.color || 'white')}">{{ line.text }}</p>
+            <p :style="{ 'text-align': line.align, 'color': line.color}">{{ line.text }}</p>
         </div>
     </div>
 </body>

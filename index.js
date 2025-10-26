@@ -4,9 +4,10 @@ const intendedTitle = 'Murder Mystery';
 const title = ref('');
 const terminal = ref([]);
 const userInput = ref('');
-const scene = ref('main');
+const scene = ref('');
 const questioning = ref(false);
 const questioningDisabled = ref(false);
+let fast = false;
 
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -22,15 +23,12 @@ async function type(text, speed, align='center', color='white'){
 
     for (let i = 0; i < text.length; i++) {
         terminal.value[terminal.value.length - 1].text += text[i];
-        await delay(speed);
+        if (!fast) await delay(speed);
     }
 }
 
-setTimeout(async ()=>{ // start intro
-    for (let i = 0; i < intendedTitle.length; i++) {
-        title.value += intendedTitle[i];
-        await delay(100);
-    }
+async function startIntro() {
+    terminal.value = [];
 
     await delay(200);
     await type('Hello Mr. Anderson', 60);
@@ -43,43 +41,68 @@ setTimeout(async ()=>{ // start intro
     await delay(500);
     scene.value = 'intro-finished';
     await type('\n\n[press enter to continue]', 0, 'right', '#888888');
-}, 2600);
+}
 
+setTimeout(async () => {
+    for (let i = 0; i < intendedTitle.length; i++) {
+        title.value += intendedTitle[i];
+        await delay(100);
+    }
+    scene.value = 'intro';
+}, 2600);
 
 document.addEventListener('keyup', (e) => {
     if (e.code === 'Enter') {
         console.log('enter pressed')
         if (scene.value === 'intro-finished') {
             scene.value = 'main';
-        }
-        if (questioning.value && !questioningDisabled.value) {
+        } else if (scene.value === 'game-over-finished') {
+            terminal.value = [];
+            scene.value = 'main';
+        } else if (questioning.value && !questioningDisabled.value) {
             handleUserInput();
         }
-    }
-    if (/^[a-zA-Z0-9]$/.test(e.key)) { // only allow alphanumeric input
+    }else if (/^[a-zA-Z0-9]$/.test(e.key)) { // only allow alphanumeric input
         if (!questioning.value || questioningDisabled.value) return;
-        terminal.value[terminal.value.length - 1].text += e.key;
         userInput.value += e.key;
-    }
-    if (e.code === 'Backspace') {
+    }else if (e.code === 'Backspace') {
         if (!questioning.value || questioningDisabled.value) return;
-        if (terminal.value[terminal.value.length - 1].text.length - 2 == 0) return;
-        terminal.value[terminal.value.length - 1].text = terminal.value[terminal.value.length - 1].text.slice(0, -1);
+        if (userInput.value.length == 0) return;
+        userInput.value = userInput.value.slice(0, -1);
+    } else if (e.code == 'Space') {
+        fast = false;
+    }
+});
+document.addEventListener('keydown', (e) => {
+    if (e.code == 'Space') {
+        fast = true;
     }
 });
 
 let possibleAnswers = [];
-let invalidResponse = {};
-async function questionPrompt(question, POSSIBLE_ANSWERS, INVALID_RESPONSE) {
-    await type(question, 40, 'left', '#ff3700');
+async function questionPrompt(POSSIBLE_ANSWERS) {
+    await type('What would you like to do?', 60);
+
+    await delay(300);
+    let question = ''
+    Object.entries(POSSIBLE_ANSWERS).forEach(([key, value]) => {
+        question += `    [${key}] ${value}\n`;
+    });
+    await type(question, 40, 'left', '#00FF00');
+    await delay(100);
+    await type('Choose an option: (' + Object.keys(POSSIBLE_ANSWERS).join(', ') + ')', 40, 'left', '#ff3700');
     userInput.value = '';
     questioning.value = true;
     questioningDisabled.value = false;
-    possibleAnswers = POSSIBLE_ANSWERS;
-    invalidResponse = INVALID_RESPONSE;
+    possibleAnswers = Object.keys(POSSIBLE_ANSWERS);
     await type('> ', 0, 'left', '#ff3700');
 
-    while (questioning.value) { await delay(100) } // wait untill question answered
+    let i = 0;
+    while (questioning.value) { // wait untill question answered
+        await delay(25)
+        terminal.value[terminal.value.length - 1].text = '> ' + userInput.value + (i < 20 ? '█' : '');
+        i = (i + 1) % 40;
+    }
 
     return userInput.value;
 }
@@ -92,16 +115,22 @@ async function handleUserInput() {
         questioning.value = false;
     } else {
         questioningDisabled.value = true;
+        await type(`"${userInput.value}"` + ' is not a valid option. Please choose a valid option: (' + possibleAnswers.join(', ') + ')', 0, 'left', '#ff3700');
         userInput.value = '';
-        await type(invalidResponse.text, invalidResponse.speed || 40, 'left', '#ff3700');
         await type('> ', 0, 'left', '#ff3700');
         questioningDisabled.value = false;
     }
 }
 
-watch(scene, (newScene) => {
-    if (newScene === 'main') {
+watch(scene, async (newScene) => {
+    if (newScene === 'intro') {
+        startIntro();
+    } else if (newScene === 'main') {
         game();
+    } else if (newScene === 'game-over') {
+        await type('Game Over. Thank you for playing!', 50, 'center', '#FF0000');
+        await type('\n\n[press enter to restart]', 0, 'right', '#888888');
+        scene.value = 'game-over-finished';
     }
 });
 
