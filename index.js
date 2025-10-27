@@ -14,6 +14,7 @@ async function delay(ms) {
 }
 
 async function type(text, speed, align='center', color='white'){
+    const div = document.getElementById('terminal');
     terminal.value.push({ text: '', align, color });
 
     if (speed == 0) {
@@ -24,6 +25,7 @@ async function type(text, speed, align='center', color='white'){
     for (let i = 0; i < text.length; i++) {
         terminal.value[terminal.value.length - 1].text += text[i];
         if (!fast) await delay(speed);
+        div.scrollTop = div.scrollHeight;
     }
 }
 

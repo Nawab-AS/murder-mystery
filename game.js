@@ -231,8 +231,8 @@ async function lodge(intro=true) {
 }
 
 async function suspects(intro=true) {
+    terminal.value = [];
     if (intro) {
-        terminal.value = [];
         await type('You approach the suspects to question them about the murder...', 40);
 
         await delay(150);

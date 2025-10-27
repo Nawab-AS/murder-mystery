@@ -43,6 +43,14 @@ h1.title {
     white-space: pre-wrap;
 }
 
+#terminal::-webkit-scrollbar {width: 10px;}
+
+#terminal::-webkit-scrollbar-track {background: #1a1a1a;}
+
+#terminal::-webkit-scrollbar-thumb {background: #ff7518;border-radius: 5px;}
+
+#terminal::-webkit-scrollbar-thumb:hover {background: #e65c00;}
+
 /*********** animations ***********/
 
 @keyframes start-terminal {
