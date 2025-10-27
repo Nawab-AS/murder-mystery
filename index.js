@@ -103,6 +103,7 @@ async function questionPrompt(POSSIBLE_ANSWERS) {
         terminal.value[terminal.value.length - 1].text = '> ' + userInput.value + (i < 20 ? '█' : '');
         i = (i + 1) % 40;
     }
+    terminal.value[terminal.value.length - 1].text = '> ' + userInput.value;
 
     return userInput.value;
 }
@@ -144,7 +145,8 @@ createApp({
             questioning,
             questioningDisabled,
             userInput,
-            handleUserInput
+            handleUserInput,
+            scene,
         };
     }
 }).mount('body');

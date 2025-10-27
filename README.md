@@ -4,7 +4,11 @@ NONE of the code for this game is written by AI.
 
 An interactive, terminal-inspired halloween-themed murder mystery game playable in your browser.
 
-There are 2 possible endings: finding the culprit or becoming a victim yourself.
+There are 4 possible endings:
+ - dying of suffocation
+ - dying of strangulation
+ - finding the culprit
+ - getting backstabbed
 
 **Estimated play time:** 7–15 minutes
 

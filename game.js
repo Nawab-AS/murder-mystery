@@ -14,14 +14,18 @@ async function game(intro=true) {
     }
 
     await delay(300);
-    await type('You are currently in the pumpkin patch. Examining the area surrounding Victor you find a few clues:', 50);
+    await type('You are currently in the pumpkin patch', 50);
 
-    await delay(300);
-    await type(`
-        - A broken pumpkin with a bloody knife inside
-        - Victor's torn shirt with a strange symbol drawn on it
-        - Footprints leading away from the crime scene
+    if (intro) {
+        await type('Examining the area surrounding Victor you find a few clues:', 50);
+
+        await delay(300);
+        await type(`
+    - A broken pumpkin with a bloody knife inside
+    - Victor's torn shirt with a strange symbol drawn on it
+    - Footprints leading away from the crime scene
     `, 50, 'left', '#FFA500');
+    }
 
     await delay(300);
     let path = await questionPrompt({ footprints: 'Follow the footprints', lodge: 'Check the inside of the lodge for more clues', suspects: 'Question the suspects' });
@@ -42,6 +46,8 @@ async function game(intro=true) {
         scene.value = 'game-over';
         return;
     }
+
+    game(false);
 }
 
 
@@ -144,9 +150,9 @@ async function lodge(intro=true) {
                 await type('You use the key to unlock the drawer and find:', 40);
                 await delay(100);
                 await type(`
-        - Uncover a torn photograph of Victor with a tall figure, the word "betrayal" written on the back
-        - A map of the lodge grounds with a red X marked in the forest
-        - An amulet with a strange symbol on it
+    - Uncover a torn photograph of Victor with a tall figure, the word "betrayal" written on the back
+    - A map of the lodge grounds with a red X marked in the forest
+    - An amulet with a strange symbol on it
                 `, 40, 'left', '#d38c08');
                 await delay(100);
                 await type('You wear the amulet, feeling a surge of energy coursing through you.', 40);
@@ -167,9 +173,9 @@ async function lodge(intro=true) {
         await delay(100);
         if (!inventory.includes('boots')) {
             await type(`After searching the guest room, you find
-        - torn piece of fabric that matches Victor's shirt
-        - A suitcase containing a disguise
-        - A pair of muddy boots matching the footprints in the pumpkin patch
+    - torn piece of fabric that matches Victor's shirt
+    - A suitcase containing a disguise
+    - A pair of muddy boots matching the footprints in the pumpkin patch
         `, 40, 'left', '#d38c08');
             await delay(100);
             inventory.push('boots');
@@ -232,11 +238,11 @@ async function suspects(intro=true) {
         await delay(150);
         await type('The suspects are: ', 40);
         await type(`
-        - Victor\'s personal assistant
-        - A masked guest
-        - The chef
-        - Victor\'s brother
-        - Victor\'s cousin.`, 50, 'left', '#d38c08');
+    - Victor\'s personal assistant
+    - A masked guest
+    - The chef
+    - Victor\'s brother
+    - Victor\'s cousin.`, 50, 'left', '#d38c08');
     }
 
     await delay(150);

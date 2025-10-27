@@ -13,6 +13,10 @@
 <body>
     <div id="terminal" v-cloak>
         <h1 class="title">{{ title }}</h1>
+        <div class="line">
+            <p style="text-align: center; color: #888888">{{ scene ? '[Hold space to speed up text]' : '' }}</p>
+        </div>
+        <br />
         <div class="line" v-for="line in terminal" :key="line.text">
             <p :style="{ 'text-align': line.align, 'color': line.color}">{{ line.text }}</p>
         </div>
