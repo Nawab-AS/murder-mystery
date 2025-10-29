@@ -2,8 +2,8 @@ let inventory = [];
 
 async function game(intro=true) {
     terminal.value = [];
-    inventory = [];
     if (intro) {
+        inventory = [];
         await type('Very well, let us begin our investigation.', 40);
         await delay(300);
 
