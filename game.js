@@ -205,7 +205,7 @@ async function lodge(intro=true) {
             await type('As you study the board even further, you notice a pattern. Victor owes someone a large sum of money, an unpaid debt', 40);
             await delay(100);
             inventory.push('debt');
-            if (!inventory.includes('motive')) {
+            if (inventory.includes('motive')) {
                 await type('You remember that Victor\'s brother told you that Victor owed him his inheritance, it must be him.', 40);
             } else {
                 await type('This clue might help you identify the killer.', 40);
