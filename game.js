@@ -413,14 +413,14 @@ async function suspects(intro=true) {
                 await delay(100);
                 await type('As you handcuff Victor\'s brother, he looks at you viciously and in a split second he attacks you with a concealed knife', 75, '#a0160c');
                 await delay(500);
-                await type('\n\nYOU DIED OF STAB WOUNDS!', 110, '#a0160c');
+                await type('\n\nYOU DIED OF STAB WOUNDS!', 110, 'center', '#FF0000');
                 return 'game-over';
             } else if (path3 === 'return') {
                 await type('You decide to return to the pumpkin patch to reconsider your options...', 40);
                 await delay(300);
                 await type('As you start to walk back, Victor\'s brother runs up and wrestles you to the ground and into a chokehold!', 75, '#a0160c');
                 await delay(500);
-                await type('\n\nYOU DIED OF STRANGULATION!', 110, '#a0160c');
+                await type('\n\nYOU DIED OF STRANGULATION!', 110, 'center', '#FF0000');
                 return 'game-over';
             }
         }
