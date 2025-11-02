@@ -8,6 +8,7 @@ const scene = ref('');
 const questioning = ref(false);
 const questioningDisabled = ref(false);
 let fast = false;
+const RED = '#ff3700';
 
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -29,22 +30,6 @@ async function type(text, speed, align='center', color='white'){
     }
 }
 
-async function startIntro() {
-    terminal.value = [];
-
-    await delay(200);
-    await type('Hello Mr. Anderson', 60);
-    await delay(150);
-    await type('I am sorry to interupt during your halloween break but there has been another incident...', 40);
-    await delay(500);
-    await type('in hindsight it wasn\'t very wise of me to give a detective a break on halloween.\n\n', 40);
-    await delay(500);
-    await type('This is the case of Victor Blackwood.', 60);
-    await delay(500);
-    scene.value = 'intro-finished';
-    await type('\n\n[press enter to continue]', 0, 'right', '#888888');
-}
-
 setTimeout(async () => {
     for (let i = 0; i < intendedTitle.length; i++) {
         title.value += intendedTitle[i];
@@ -64,7 +49,7 @@ document.addEventListener('keyup', (e) => {
         } else if (questioning.value && !questioningDisabled.value) {
             handleUserInput();
         }
-    }else if (/^[a-zA-Z0-9]$/.test(e.key)) { // only allow alphanumeric input
+    }else if (/^[0-9]$/.test(e.key)) { // only allow numeric input
         if (!questioning.value || questioningDisabled.value) return;
         userInput.value += e.key;
     }else if (e.code === 'Backspace') {
@@ -83,21 +68,23 @@ document.addEventListener('keydown', (e) => {
 
 let possibleAnswers = [];
 async function questionPrompt(POSSIBLE_ANSWERS) {
+    const POSSIBLE_ANSWERS_list = Object.values(POSSIBLE_ANSWERS);
     await type('What would you like to do?', 60);
 
     await delay(300);
-    let question = ''
-    Object.entries(POSSIBLE_ANSWERS).forEach(([key, value]) => {
-        question += `    [${key}] ${value}\n`;
-    });
+    let question = '';
+    possibleAnswers = [];
+    for (let i = 0; i < POSSIBLE_ANSWERS_list.length; i++) {
+        question += `    [${i+1}] ${POSSIBLE_ANSWERS_list[i]}\n`;
+        possibleAnswers.push(i+1);
+    }
     await type(question, 40, 'left', '#00FF00');
     await delay(100);
-    await type('Choose an option: (' + Object.keys(POSSIBLE_ANSWERS).join(', ') + ')', 40, 'left', '#ff3700');
+    await type('Choose an option:', 40, 'left', RED);
     userInput.value = '';
     questioning.value = true;
     questioningDisabled.value = false;
-    possibleAnswers = Object.keys(POSSIBLE_ANSWERS);
-    await type('> ', 0, 'left', '#ff3700');
+    await type('> ', 0, 'left', RED);
 
     let i = 0;
     while (questioning.value) { // wait untill question answered
@@ -107,20 +94,20 @@ async function questionPrompt(POSSIBLE_ANSWERS) {
     }
     terminal.value[terminal.value.length - 1].text = '> ' + userInput.value;
 
-    return userInput.value;
+    return Object.keys(POSSIBLE_ANSWERS)[ possibleAnswers.indexOf(userInput.value) ];
 }
 
 
 async function handleUserInput() {
-    userInput.value = userInput.value.trim().toLowerCase();
-    if (userInput.value === '') return;
+    userInput.value = Number(userInput.value.trim());
+    if (userInput.value.length == 0) return;
     if (questioning.value && possibleAnswers.includes(userInput.value)) {
         questioning.value = false;
     } else {
         questioningDisabled.value = true;
-        await type(`"${userInput.value}"` + ' is not a valid option. Please choose a valid option: (' + possibleAnswers.join(', ') + ')', 0, 'left', '#ff3700');
+        await type(`"${userInput.value}"` + ' is not a valid option. Please choose a valid option: ', 0, 'left', RED);
         userInput.value = '';
-        await type('> ', 0, 'left', '#ff3700');
+        await type('> ', 0, 'left', RED);
         questioningDisabled.value = false;
     }
 }
@@ -131,7 +118,7 @@ watch(scene, async (newScene) => {
     } else if (newScene === 'main') {
         game();
     } else if (newScene === 'game-over') {
-        await type('Game Over. Thank you for playing!', 50, 'center', '#FF0000');
+        await type('Game Over. Thank you for playing!', 50, 'center', RED);
         await type('\n\n[press enter to restart]', 0, 'right', '#888888');
         scene.value = 'game-over-finished';
     }

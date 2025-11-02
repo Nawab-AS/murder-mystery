@@ -1,5 +1,22 @@
 let inventory = [];
 
+
+async function startIntro() {
+    terminal.value = [];
+
+    await delay(200);
+    await type('Hello Mr. Anderson', 60);
+    await delay(150);
+    await type('I am sorry to interupt during your halloween break but there has been another incident...', 40);
+    await delay(500);
+    await type('in hindsight it wasn\'t very wise of me to give a detective a break on halloween.\n\n', 40);
+    await delay(500);
+    await type('This is the case of Victor Blackwood.', 60);
+    await delay(500);
+    scene.value = 'intro-finished';
+    await type('\n\n[press enter to continue]', 0, 'right', '#888888');
+}
+
 async function game(intro=true) {
     terminal.value = [];
     if (intro) {
