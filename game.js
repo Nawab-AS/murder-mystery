@@ -9,7 +9,7 @@ async function startIntro() {
     await delay(150);
     await type('I am sorry to interupt during your halloween break but there has been another incident...', 40);
     await delay(500);
-    await type('in hindsight it wasn\'t very wise of me to give a detective a break on halloween.\n\n', 40);
+    await type('In hindsight it wasn\'t very wise of me to give a detective a break on halloween.\n\n', 40);
     await delay(500);
     await type('This is the case of Victor Blackwood.', 60);
     await delay(500);
@@ -41,7 +41,7 @@ async function game(intro=true) {
     - A broken pumpkin with a bloody knife inside
     - Victor's torn shirt with a strange symbol drawn on it
     - Footprints leading away from the crime scene
-    `, 50, 'left', '#FFA500');
+    `, 50, 'left', COLORS.ORANGE);
     }
 
     await delay(300);
@@ -130,7 +130,7 @@ async function footprints() {
             if (!inventory.includes('amulet')) {
                 await type('As you read the diary you start suffocating by a mysterious force...', 20);
                 await delay(500);
-                await type('\n\nYOU DIED OF SUFFOCATION!', 110, 'center', '#FF0000');
+                await type('\n\nYOU DIED OF SUFFOCATION!', 110, 'center', COLORS.RED);
                 return 'game-over';
             } else {
                 await type('You turn to the next page and find a clue about the secret meeting location: the cellar in the lodge...', 40);
@@ -151,13 +151,17 @@ async function lodge(intro=true) {
     if (intro) await type('You head back inside the lodge to search for more clues...', 40);
     await delay(300);
 
-    let prompt  = await questionPrompt({ kitchen: 'Search the kitchen', study: 'Search Victor\'s study', guest: 'Search the guest room', cellar: 'Search the cellar', return: 'Return to the pumpkin patch' });
+    let prompt  = await questionPrompt({ kitchen: 'Search the kitchen', study: 'Search Victor\'s study', guest: 'Search the guest room', cellar: 'Search the cellar', attic: 'Search the attic', return: 'Return to the pumpkin patch' });
     await delay(300);
     
     if (prompt === 'kitchen') {
         await type('You decide to search the kitchen for clues...', 40);
         await delay(100);
-        await type('After searching the kitchen for a while, there is nothing special other that the missing knife that matches the one used in the murder', 40);
+        await type('After searching the kitchen for a while, there is nothing special other than the missing knife that matches the one used in the murder', 40);
+        if (!inventory.includes('chef-intent')) {
+            await type('You also find a hidden compartment with a note from the chef. A knife rattles in a nearby drawer. The words move like living ink, the note says: "The wealth is mine, the curse demands it."', 40);
+            inventory.push('chef-intent');
+        }
     } else if (prompt === 'study') {
         await type('You decide to search Victor\'s study for clues...', 40);
         await delay(100);
@@ -169,12 +173,14 @@ async function lodge(intro=true) {
                 await type(`
     - Uncover a torn photograph of Victor with a tall figure, the word "betrayal" written on the back
     - A map of the lodge grounds with a red X marked in the forest
+    - A ledger book detailing large financial transactions
     - An amulet with a strange symbol on it
-                `, 40, 'left', '#d38c08');
+                `, 40, 'left', COLORS.ORANGE);
                 await delay(100);
                 await type('You wear the amulet, feeling a surge of energy coursing through you.', 40);
                 await delay(100);
                 inventory.push('amulet');
+                inventory.push('ledger');
             } else {
                 await type('You look at the rummaged drawer. There is nothing else of interest', 40);
                 await delay(100);
@@ -192,10 +198,12 @@ async function lodge(intro=true) {
             await type(`After searching the guest room, you find
     - torn piece of fabric that matches Victor's shirt
     - A suitcase containing a disguise
+    - a map of the lodge with robbery routes marked
     - A pair of muddy boots matching the footprints in the pumpkin patch
-        `, 40, 'left', '#d38c08');
+        `, 40, 'left', COLORS.ORANGE);
             await delay(100);
             inventory.push('boots');
+            inventory.push('robbery-map');
 
         } else {
             await type('After searching the guest room again, you find nothing new.', 40);
@@ -215,19 +223,34 @@ async function lodge(intro=true) {
             await delay(100);
             await type('The door opens with a creak, revealing a dark, damp cellar filled with old furniture and boxes. As you search through the cellar you move some boxes aside and find: a conspiracy board on the wall', 40);
             await delay(100);
-            await type('The board is filled with notes, photos, and strings connecting various people and events. In the center there is a picture of Victor with a red X over it.', 40);
+            await type('The board is filled with notes, photos, and strings connecting various people and events. In the center there is a picture of Victor with a red X over it', 40);
             await delay(100);
-            await type('You study the board and realize that Victor was involved in a shady gambling opperation, earning millions every year.', 40);
+            await type('You study the board and realize that Victor had a hidden fortune buried somewhere on the ground', 40);
             await delay(100);
-            await type('As you study the board even further, you notice a pattern. Victor owes someone a large sum of money, an unpaid debt', 40);
+            await type('As you study the board even further, you notice references to the family curse, with symbols matching those on Victor\'s shirt', 40);
             await delay(100);
-            inventory.push('debt');
-            if (inventory.includes('motive')) {
-                await type('You remember that Victor\'s brother told you that Victor owed him his inheritance, it must be him.', 40);
-            } else {
-                await type('This clue might help you identify the killer.', 40);
-                await delay(100);
-            }
+            inventory.push('curse-evidence');
+            inventory.push('brother-motive');
+        } 
+
+    } else if (prompt === 'attic') {
+        await type('You decide to search the attic for clues...', 40);
+        await delay(100);
+        if (!inventory.includes('attic')) {
+            await type('After climbing the creaky stairs to the attic, you find dusty boxes and old furniture. A cold draft makes you shiver', 40);
+            await delay(100);
+            await type('As you rummage through the boxes, you discover:', 40);
+            await delay(100);
+            await type(`
+    - Old family photographs showing Victor and his brother as children
+    - A letter from Victor's father, mentioning a family secret about hidden wealth
+    - A torn page from a journal, mentioning Victor's fear of betrayal from within the family
+            `, 40, 'left', COLORS.ORANGE);
+            await delay(100);
+            inventory.push('attic');
+        } else {
+            await type('You search the attic again but find nothing new', 40);
+            await delay(100);
         }
 
     } else if (prompt === 'return') {
@@ -259,7 +282,7 @@ async function suspects(intro=true) {
     - A masked guest
     - The chef
     - Victor\'s brother
-    - Victor\'s cousin.`, 50, 'left', '#d38c08');
+    - Victor\'s cousin.`, 50, 'left', COLORS.ORANGE);
     }
 
     await delay(150);
@@ -277,7 +300,7 @@ async function suspects(intro=true) {
             await type('You: "I heard that Victor wanted to talk with you, what exactly did he want to discuss?"', 40);
             await delay(100);
             await type('Assistant: "He mentioned something about a family secret, but he was vague. I thought it was just party talk"', 40);
-            await delay(100);
+            await delay(100); 
             await type('You: "Did anyone else overhear your conversation?"', 40);
             await delay(100);
             await type('Assistant: "Not that I recall, but the lodge was crowded"', 40);
@@ -321,7 +344,11 @@ async function suspects(intro=true) {
     } else if (path === 'chef') {
         await type('You approach the chef...', 40);
         await delay(100);
-        path2 = await questionPrompt({ knife: 'Ask about the missing knife', whereabouts: 'Ask about the chef\'s whereabouts during the murder' });
+        let options = { knife: 'Ask about the missing knife', whereabouts: 'Ask about the chef\'s whereabouts during the murder' };
+        if (inventory.includes('ledger') && inventory.includes('attic') && inventory.includes('chef-intent') && inventory.includes('robbery-plan')) {
+            options.confront = 'Confront about the robbery and the curse';
+        }
+        path2 = await questionPrompt(options);
 
         if (path2 === 'knife') {
             await type('You ask the chef about the missing knife...', 40);
@@ -344,14 +371,30 @@ async function suspects(intro=true) {
             await type('You: "Did you see Victor at all?"', 40);
             await delay(100);
             await type('Chef: "He came in for a drink, but left quickly. He seemed agitated"', 40);
-        }
-
+        } else if (path2 === 'confront') {
+        await type('You confront the chef about the robbery and the curse...', 40);
+        await delay(100);
+        await type('You: "I know about your plan to rob Victor\'s hidden wealth and the family curse."', 40);
+        await delay(100);
+        await type('The chef\'s eyes glow with an eerie light, and a cold wind fills the room. Shadows dance on the walls.', 40);
+        await delay(100);
+        await type('Chef: "The spirits... they whisper to me... the wealth is cursed, but it must be mine!"', 40);
+        await delay(100);
+        await type('You: "Did the curse make you kill him?"', 40);
+        await delay(100);
+        await type('Chef: "Yes... the betrayal in the pumpkin patch... the curse demanded blood. I stabbed him to claim what was owed by the spirits."', 40);
+        await delay(100);
+        await type('\n\nYOU FOUND THE KILLER!', 150, 'center', COLORS.GREEN);
+        await delay(500);
+        return 'game-over';
+    }
+    
     } else if (path === 'brother') {
         await type('You approach Victor\'s brother...', 40);
         await delay(100);
 
-        if (inventory.includes('debt')) {
-            await type('You remember that Victor\'s brother told you that Victor owed him his inheritance, it must be him.', 40);
+        if (inventory.includes('brother-motive')) {
+            await type('You remember that Victor\'s brother told you that Victor owed him his inheritance, it must be him', 40);
             path2 = await questionPrompt({ relations: 'Ask about his relation with Victor', victor: 'Ask if he saw Victor anytime during the party', board: 'Confront him about the conspiracy board in the cellar' });
         } else {
             path2 = await questionPrompt({ relations: 'Ask about his relation with Victor', victor: 'Ask if he saw Victor anytime during the party' });
@@ -367,11 +410,6 @@ async function suspects(intro=true) {
             await type('You: "Did you argue about it?"', 40);
             await delay(100);
             await type('Sibling: "We exchanged words, but nothing violent."', 40);
-            inventory.push('motive');
-            if (inventory.includes('debt')) {
-                await delay(100);
-                await type('you remember the conspiricy board in the cellar, it mentioned Victor owed someone a large sum of money. this must be the killer', 40);
-            }
 
         } else if (path2 === 'victor') {
             await type('You ask Victor\'s brother if he saw Victor during the party...', 40);
@@ -416,7 +454,7 @@ async function suspects(intro=true) {
                 await delay(100);
                 await type('Victor\'s Brother: "Okay, I admit it. I was the one who killed him..."', 40);
                 await delay(100);
-                await type('\n\nYOU FOUND THE KILLER!', 150, 'center', '#00FF00');
+                await type('\n\nYOU FOUND THE KILLER!', 150, 'center', COLORS.GREEN);
                 await delay(500);
                 return 'game-over';
             } else if (path3 === 'arrest') {
@@ -430,14 +468,14 @@ async function suspects(intro=true) {
                 await delay(100);
                 await type('As you handcuff Victor\'s brother, he looks at you viciously and in a split second he attacks you with a concealed knife', 75, '#a0160c');
                 await delay(500);
-                await type('\n\nYOU DIED OF STAB WOUNDS!', 110, 'center', '#FF0000');
+                await type('\n\nYOU DIED OF STAB WOUNDS!', 110, 'center', COLORS.RED);
                 return 'game-over';
             } else if (path3 === 'return') {
                 await type('You decide to return to the pumpkin patch to reconsider your options...', 40);
                 await delay(300);
                 await type('As you start to walk back, Victor\'s brother runs up and wrestles you to the ground and into a chokehold!', 75, '#a0160c');
                 await delay(500);
-                await type('\n\nYOU DIED OF STRANGULATION!', 110, 'center', '#FF0000');
+                await type('\n\nYOU DIED OF STRANGULATION!', 110, 'center', COLORS.RED);
                 return 'game-over';
             }
         }

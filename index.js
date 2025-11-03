@@ -8,7 +8,7 @@ const scene = ref('');
 const questioning = ref(false);
 const questioningDisabled = ref(false);
 let fast = false;
-const RED = '#ff3700';
+const COLORS = { RED: '#ff3700', ORANGE: '#FFA500', GREEN: '#00ff00' };
 
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -78,7 +78,7 @@ async function questionPrompt(POSSIBLE_ANSWERS) {
         question += `    [${i+1}] ${POSSIBLE_ANSWERS_list[i]}\n`;
         possibleAnswers.push(i+1);
     }
-    await type(question, 40, 'left', '#00FF00');
+    await type(question, 40, 'left', COLORS.GREEN);
     await delay(100);
     await type('Choose an option:', 40, 'left', RED);
     userInput.value = '';
@@ -100,7 +100,7 @@ async function questionPrompt(POSSIBLE_ANSWERS) {
 
 async function handleUserInput() {
     userInput.value = Number(userInput.value.trim());
-    if (userInput.value.length == 0) return;
+    if (isNaN(userInput.value)) return;
     if (questioning.value && possibleAnswers.includes(userInput.value)) {
         questioning.value = false;
     } else {
