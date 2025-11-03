@@ -5,13 +5,13 @@ async function startIntro() {
     terminal.value = [];
 
     await delay(200);
-    await type('Hello Mr. Anderson', 60);
+    await type('Hello Mr. Anderson', 60, 'center', COLORS.ORANGE);
     await delay(150);
-    await type('I am sorry to interupt during your halloween break but there has been another incident...', 40);
+    await type('I am sorry to interrupt during your Halloween break, but there has been another incident...', 40, 'center', COLORS.RED);
     await delay(500);
-    await type('In hindsight it wasn\'t very wise of me to give a detective a break on halloween.\n\n', 40);
+    await type('In hindsight, it wasn\'t very wise of me to give a detective a break on Halloween.\n\n', 40, 'center', COLORS.ORANGE);
     await delay(500);
-    await type('This is the case of Victor Blackwood.', 60);
+    await type('This is the case of Victor Blackwood.', 60, 'center', COLORS.RED);
     await delay(500);
     scene.value = 'intro-finished';
     await type('\n\n[press enter to continue]', 0, 'right', '#888888');
@@ -21,25 +21,25 @@ async function game(intro=true) {
     terminal.value = [];
     if (intro) {
         inventory = [];
-        await type('Very well, let us begin our investigation.', 40);
+        await type('Very well, let us begin our investigation.', 40, 'center', COLORS.GREEN);
         await delay(300);
 
-        await type('You are in a remote mountain lodge. The lodge is decorated with jack-o-lanterns, cobwebs, and eerie autumn decor. The festive atmosphere is shattered when a scream echoes through the night. Victor Blackwood, the wealthy host of the party, is found dead in the pumpkin patch, his body surrounded by smashed pumpkins.', 30);
+        await type('You are in a remote mountain lodge. The lodge is decorated with jack-o-lanterns, cobwebs, and eerie autumn decor. The festive atmosphere is shattered when a scream echoes through the night. Victor Blackwood, the wealthy host of the party, is found dead in the pumpkin patch, his body surrounded by smashed pumpkins.', 30, 'center', COLORS.ORANGE);
 
         await delay(300);
-        await type('There are five possible suspects: Victor\'s personal assistant, a masked guest, the chef, Victor\'s brother, and Victor\'s cousin.', 50);
+        await type('There are five possible suspects: Victor\'s personal assistant, a masked guest, the chef, Victor\'s brother, and Victor\'s cousin.', 50, 'center', COLORS.ORANGE);
     }
 
     await delay(300);
-    await type('You are currently in the pumpkin patch', 50);
+    await type('You are currently in the pumpkin patch. The moon casts an eerie glow over the scene, and the shadows seem to move on their own.', 50);
 
     if (intro) {
-        await type('Examining the area surrounding Victor you find a few clues:', 50);
+        await type('Examining the area surrounding Victor, you find a few clues:', 50, 'left', COLORS.GREEN);
 
         await delay(300);
         await type(`
     - A broken pumpkin with a bloody knife inside
-    - Victor's torn shirt with a strange symbol drawn on it
+    - Victor\'s torn shirt with a strange symbol drawn on it
     - Footprints leading away from the crime scene
     `, 50, 'left', COLORS.ORANGE);
     }

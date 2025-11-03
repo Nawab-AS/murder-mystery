@@ -80,11 +80,11 @@ async function questionPrompt(POSSIBLE_ANSWERS) {
     }
     await type(question, 40, 'left', COLORS.GREEN);
     await delay(100);
-    await type('Choose an option:', 40, 'left', RED);
+    await type('Choose an option:', 40, 'left', COLORS.RED);
     userInput.value = '';
     questioning.value = true;
     questioningDisabled.value = false;
-    await type('> ', 0, 'left', RED);
+    await type('> ', 0, 'left', COLORS.RED);
 
     let i = 0;
     while (questioning.value) { // wait untill question answered
@@ -105,9 +105,9 @@ async function handleUserInput() {
         questioning.value = false;
     } else {
         questioningDisabled.value = true;
-        await type(`"${userInput.value}"` + ' is not a valid option. Please choose a valid option: ', 0, 'left', RED);
+        await type(`"${userInput.value}"` + ' is not a valid option. Please choose a valid option: ', 0, 'left', COLORS.RED);
         userInput.value = '';
-        await type('> ', 0, 'left', RED);
+        await type('> ', 0, 'left', COLORS.RED);
         questioningDisabled.value = false;
     }
 }
@@ -118,7 +118,7 @@ watch(scene, async (newScene) => {
     } else if (newScene === 'main') {
         game();
     } else if (newScene === 'game-over') {
-        await type('Game Over. Thank you for playing!', 50, 'center', RED);
+        await type('Game Over. Thank you for playing!', 50, 'center', COLORS.RED);
         await type('\n\n[press enter to restart]', 0, 'right', '#888888');
         scene.value = 'game-over-finished';
     }
